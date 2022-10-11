@@ -3,6 +3,7 @@ const express = require("express");
 const { db } = require("../util/admin");
 
 exports.create_bill = async (req, res) => {
+  //add new bill to firestore database
   try {
     const {
       customer_name,

@@ -6,16 +6,15 @@ require("dotenv").config();
 
 exports.register = async (req, res) => {
   try {
-    // Get user input
+    // get user input
     const { username, password, date, name } = req.body;
 
-    // Validate user input
+    // validate user input
     if (!(username && password)) {
       res.status(400).send("All input is required");
     }
 
     // check if user already exists
-    // Validate if user exists in our database
     const oldUserRef = await db.collection("Users").doc(username);
 
     let documentData = null;
@@ -33,10 +32,10 @@ exports.register = async (req, res) => {
       return res.status(409).send("User already exists. Please login");
     }
 
-    //Encrypt user password
+    // encrypt user password
     encryptedPassword = await bcrypt.hash(password, 10);
 
-    // Create new user in database
+    // create new user in database
     const userRef = await db.collection("Users").doc(username).set({
       username: username,
       password: encryptedPassword,
@@ -44,7 +43,7 @@ exports.register = async (req, res) => {
       name: name,
     });
 
-    // Create token
+    // create token
     const token = jwt.sign(
       { user_id: userRef.id, username, name },
       process.env.JWT_KEY,
